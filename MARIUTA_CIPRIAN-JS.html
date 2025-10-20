@@ -1,7 +1,321 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-    <head></head>
+    <head>
+        <title>Titolo</title>
+        <link rel="icon" href="">
+    <link rel="stylesheet" href="../css/style.css">
+    <!--JS-->
+    <script>
+            window.onload = function() {
+                const select = document.getElementById('giorni');
+                for (let i = 0; i <= 30; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                select.appendChild(option);
+                }
+                const mesi = [
+                    "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+                    "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+                ];
+                const selectMesi = document.getElementById('mesi');
+                mesi.forEach((mese, index) => {
+                    const option = document.createElement('option');
+                    option.value = index + 1;
+                    option.textContent = mese;
+                    selectMesi.appendChild(option);
+                });
+
+                // Anni da 1900 a 2025
+                const selectAnni = document.getElementById('anni');
+                for (let anno = 1900; anno <= 2025; anno++) {
+                    const option = document.createElement('option');
+                    option.value = anno;
+                    option.textContent = anno;
+                    selectAnni.appendChild(option);
+                }
+            };
+            // ========================
+            // VARIABILI GLOBALI
+            // ========================
+            var array_dati = ["admin","admin","ciprianciprian","ciprianciprian"];
+
+            // ========================
+            // DATABASE
+            // ========================
+            function data_utenti(userName, passWord, boolDatiNuovi){
+            if (boolDatiNuovi){
+                array_dati.push(userName, passWord);
+            }
+            console.log(array_dati);
+            return array_dati;
+            }
+
+            function db_messaggi(){
+                return [
+                    "Nome utente non abbastanza lungo, 8 caratteri minimo [errore 0]",
+                    "Password troppo corta",
+                    "Nome Utente gia' presente.",
+                    "Le password devono combaciare"
+                ];
+            }
+
+            // ========================
+            // FUNZIONI LOGIN
+            // ========================
+            function login_funct(){
+                var username = document.getElementById('utente').value;
+                var password = document.getElementById('pass').value;
+                var classe_username = document.getElementById('utente');
+                var classe_password = document.getElementById('pass');
+                var classe_errore = document.getElementById('errore');
+                var db = data_utenti();
+
+                if(controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore)) {
+                    controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore);
+                }
+            }
+
+            function controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore){
+                classe_username.classList.remove("error");
+                classe_password.classList.remove("error");
+                classe_errore.innerText = "";
+
+                if(username === "" && password === ""){
+                    classe_errore.innerText="Inserire nome e password";
+                    classe_username.classList.add("error");
+                    classe_password.classList.add("error");
+                    alert("Inserire Nome e Password");
+                    return false;
+                }
+                if(username === ""){
+                    classe_username.classList.add("error");
+                    classe_errore.innerText="Inserire nome";
+                    alert("Inserire Nome");
+                    return false;
+                }
+                if(password === ""){
+                    classe_password.classList.add("error");
+                    classe_errore.innerText="Inserire password";
+                    alert("Inserire Password");
+                    return false;
+                }
+                return true;
+            }
+
+            function controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore){
+                for(let i=0; i<db.length; i+=2){
+                    if(username === db[i]){
+                        if(password === db[i+1]){
+                            alert("Loggato!");
+                        } else {
+                            inserimento_errato(classe_username, classe_password, classe_errore);
+                        }
+                        return; 
+                    }
+                }
+                inserimento_errato(classe_username, classe_password, classe_errore);
+            }
+
+            function inserimento_errato(classe_username, classe_password, classe_errore){
+                classe_username.classList.add('error');
+                classe_password.classList.add("error");
+                classe_errore.innerText="Nome o Password errati";
+            }
+
+            // ========================
+            // FUNZIONI REGISTRAZIONE
+            // ========================
+            function RegistraFunction(){
+                var Database  = data_utenti(0,false);
+                var ClassUtente = document.getElementById("utente_registra");
+                var ClassPassword = document.getElementById("pass_registra");
+                var classPasswordRipeti = document.getElementById("pass_registra_controllo");
+                var Utente = ClassUtente.value;
+                var Password = ClassPassword.value;
+                var PasswordRipeti = classPasswordRipeti.value;
+                var error = document.getElementById("errore2");
+                const db_errori = db_messaggi();
+
+                ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori);
+                var bool = controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error);
+
+                if(bool){
+                    var boolDati = aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori);
+                }
+
+                if(boolDati){
+                    data_utenti(Utente, Password, true);
+                    alert("Registrazione completata!");
+                }
+                alert_messaggio(Utente,Password);
+            }
+
+            function ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori){
+                ClassUtente.classList.remove("error");
+                ClassPassword.classList.remove("error");
+                error.innerText = "";
+
+                if(Utente.length < 8 && Password.length < 8){
+                    error.innerText = db_errori[0] + "\n" + db_errori[1];
+                    ClassUtente.classList.add("error");
+                    ClassPassword.classList.add("error");
+                    return;
+                }
+                if(Utente.length < 8){
+                    error.innerText = db_errori[0];
+                    ClassUtente.classList.add("error");
+                    return;
+                }
+                if(Password.length < 8){
+                    error.innerText = db_errori[1];
+                    ClassPassword.classList.add("error");
+                    return;
+                }
+            }
+
+            function controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error){
+                if(Password === PasswordRipeti){
+                    return true;
+                } else {
+                    error.innerText = db_errori[3];
+                    ClassPassword.classList.add("error");
+                    classPasswordRipeti.classList.add("error");
+                    return false;
+                }
+            }
+
+            function aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori){
+                for(var i=0; i<Database.length; i+=2){
+                    if(Utente === Database[i]){
+                        ClassUtente.classList.add("error");
+                        error.innerText = db_errori[2];
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function alert_messaggio(Utente,Password){
+                var x_lunghezza =Password.length;
+                var messaggio_password ="*" * x_lunghezza;
+                alert(utente + "\n" + messaggio_password);
+            }
+
+            // ========================
+            // CHECKBOXES
+            // ========================
+            function checkboxes(){
+            var cb1 = document.getElementById("c1");
+            var cb2 = document.getElementById("c2");
+            var cb3 = document.getElementById("c3");
+
+            cb1.addEventListener("click", function() {
+                SelezionaCheckbox(cb1); //esegue funzione sotto con cb1 come parametro
+                // 
+            });
+            cb2.addEventListener("click", function() {
+                SelezionaCheckbox(cb2);
+            });
+            cb3.addEventListener("click", function() {
+                SelezionaCheckbox(cb3);
+            });
+
+            function SelezionaCheckbox(cb_selezionato) {
+                cb1.checked = (cb_selezionato === cb1); // .checked = se ( cb1 === cb1) oppure (cb2 (checked) === cb1 => va a false)
+                cb2.checked = (cb_selezionato === cb2);
+                cb3.checked = false;
+                alert(cb_selezionato.id);
+            }
+            };
+            function mostraStato(checkbox) {
+                const nome = checkbox.nextElementSibling.textContent;
+                let messaggio = nome + (checkbox.checked ? " selezionato!" : " deselezionato!\n");
+                messaggio += "Stato attuale:\n";
+
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    const n = cb.nextElementSibling.textContent;
+                    messaggio += n + ": " + (cb.checked ? "SI" : "X") + "\n";
+            });
+
+    alert(messaggio);
+}
+    </script>
+    <!-- CSS-->
+    <style>
+        .error{
+            border: red solid 4px;
+        }
+        .correct{
+            border: green solid 4px;
+        }
+        html{
+            display: flex;
+            justify-content: center;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .form-class{
+            display: grid;
+            padding: 80px;
+        }
+        input[type="button"] {
+            border-radius: 10px;
+            background-color: black;
+            color: white;
+            font-weight: bolder;
+            cursor: grab;
+        }
+        .inpt{
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .grandezza{
+            height: 30px;
+            width: 200px;
+        }
+    </style>
+    
+    </head>
     <body>
-        
+        <div>
+            <form class="form-class">
+                <h1 class="login-titolo">Login page</h1>
+                <input type="text" placeholder="Utente" id="utente" class="grandezza inpt"><br><br>
+                <input type="password" placeholder="Password" id="pass" class="grandezza inpt"> <br><br>
+                <input type="button" value="Accedi" onclick="login_funct() " class="grandezza"> 
+            </form>
+        </div>
+        <p id="errore"></p>
+
+        <div>
+            <form class="form-class">
+                <h1 class="login-titolo">Register Page</h1>
+                <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt"><br><br>
+                <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt"> <br><br>
+                <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt"> <br><br>
+                <input type="button" value="Accedi" onclick="RegistraFunction() " class="grandezza"> 
+            </form>
+        </div>
+        <p id="errore2"></p>
+        <h1>Checkbox con js</h1>  
+        <div class="form-class">
+            <input type="checkbox" id="c1" onclick=" checkboxes()"> <label>Maschio</label>
+            <input type="checkbox" id="c2" onclick=" checkboxes()"><label>Femmina</label>
+            <input type="checkbox" id="c3" onclick=" checkboxes()"><label>LGBTQ</label>
+        </div>
+        <h1>Data di nascita</h1>  
+        <div class="form-class">
+            <select id="giorni"></select>
+            <select id="mesi"></select>
+            <select id="anni"></select>
+        </div>
+        <h1>hobby</h1>  
+        <div class="form-class">
+            <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
+            <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
+            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
+        </div>
     </body>
 </html>

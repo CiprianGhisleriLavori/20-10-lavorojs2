@@ -143,12 +143,16 @@
                 if(bool){
                     var boolDati = aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori);
                 }
+                var controllo_info_var = controllo_info();
 
-                if(boolDati){
-                    data_utenti(Utente, Password, true);
-                    alert("Registrazione completata!");
-                }
+                if(controllo_info_var){
+                    if(boolDati){
+                        data_utenti(Utente, Password, true);
+                        alert("Registrazione completata!");
+                        }   
                 alert_messaggio(Utente,Password);
+                }
+
             }
 
             function ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori){
@@ -240,6 +244,32 @@
 
     alert(messaggio);
 }
+    function controllo_info(){
+        var cb1 = document.getElementById("c1");
+        var cb2 = document.getElementById("c2");
+        var cb3 = document.getElementById("c3");
+        var cb1 = document.getElementById("calcio");
+        var cb2 = document.getElementById("basket");
+        var cb3 = document.getElementById("canottaggio");
+        var giorni = document.getElementById("giorni").value;
+        var giorni = document.getElementById("mesi").value;
+        var giorni = document.getElementById("anni").value;
+
+        if(cb1.checked || cb2.checked ||cb3.checked){
+            alert("Sezione sesso va bene")
+            if(calcio.checked || basket.checked || canottaggio.checked){
+                alert("Sezione sport va bene");
+                //esecuzione riassunto
+                alert("Sezione info giusto");
+                return true;
+            }
+        }
+        else{
+            alert("inserire tutti i parametri")
+            return false;
+        }
+    }
+
     </script>
     <!-- CSS-->
     <style>
@@ -295,7 +325,6 @@
                 <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt"><br><br>
                 <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt"> <br><br>
                 <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt"> <br><br>
-                <input type="button" value="Accedi" onclick="RegistraFunction() " class="grandezza"> 
             </form>
         </div>
         <p id="errore2"></p>
@@ -315,7 +344,9 @@
         <div class="form-class">
             <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
             <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
-            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
+            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label> <br><br>
+            <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza"> 
         </div>
+
     </body>
 </html>

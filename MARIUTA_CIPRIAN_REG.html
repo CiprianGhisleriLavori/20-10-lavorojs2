@@ -1,249 +1,228 @@
 <!doctype html>
 <html>
-    <head>
-        <title>REGISTRA</title>
-        <link rel="icon" href="">
+  <head>
+    <title>REGISTRA</title>
+    <link rel="icon" href="">
     <!--JS-->
     <script>
-            window.onload = function() {
-                const select = document.getElementById('giorni');
-                for (let i = 0; i <= 30; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                select.appendChild(option);
-                }
-                const mesi = [
-                    "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
-                    "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
-                ];
-                const selectMesi = document.getElementById('mesi');
-                mesi.forEach((mese, index) => {
-                    const option = document.createElement('option');
-                    option.value = index + 1;
-                    option.textContent = mese;
-                    selectMesi.appendChild(option);
-                });
+      window.onload = function() {
+        const select = document.getElementById('giorni');
+        for (let i = 0; i <= 30; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = i;
+          select.appendChild(option);
+        }
+        const mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+        const selectMesi = document.getElementById('mesi');
+        mesi.forEach((mese, index) => {
+          const option = document.createElement('option');
+          option.value = index + 1;
+          option.textContent = mese;
+          selectMesi.appendChild(option);
+        });
+        // Anni da 1900 a 2025
+        const selectAnni = document.getElementById('anni');
+        for (let anno = 1900; anno <= 2025; anno++) {
+          const option = document.createElement('option');
+          option.value = anno;
+          option.textContent = anno;
+          selectAnni.appendChild(option);
+        }
+      };
+      // ========================
+      // VARIABILI GLOBALI
+      // ========================
+      var array_dati = ["admin", "admin", "ciprianciprian", "ciprianciprian"];
+      // ========================
+      // DATABASE
+      // ========================
+      function data_utenti(userName, passWord, boolDatiNuovi) {
+        if (boolDatiNuovi) {
+          array_dati.push(userName, passWord);
+        }
+        console.log(array_dati);
+        return array_dati;
+      }
 
-                // Anni da 1900 a 2025
-                const selectAnni = document.getElementById('anni');
-                for (let anno = 1900; anno <= 2025; anno++) {
-                    const option = document.createElement('option');
-                    option.value = anno;
-                    option.textContent = anno;
-                    selectAnni.appendChild(option);
-                }
-            };
-            // ========================
-            // VARIABILI GLOBALI
-            // ========================
-            var array_dati = ["admin","admin","ciprianciprian","ciprianciprian"];
+      function db_messaggi() {
+        return ["Nome utente non abbastanza lungo, 8 caratteri minimo [errore 0]", "Password troppo corta", "Nome Utente gia' presente.", "Le password devono combaciare"];
+      }
+      // ========================
+      // FUNZIONI LOGIN
+      // ========================
+      function login_funct() {
+        var username = document.getElementById('utente').value;
+        var password = document.getElementById('pass').value;
+        var classe_username = document.getElementById('utente');
+        var classe_password = document.getElementById('pass');
+        var classe_errore = document.getElementById('errore');
+        var db = data_utenti();
+        if (controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore)) {
+          controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore);
+        }
+      }
 
-            // ========================
-            // DATABASE
-            // ========================
-            function data_utenti(userName, passWord, boolDatiNuovi){
-            if (boolDatiNuovi){
-                array_dati.push(userName, passWord);
+      function controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore) {
+        classe_username.classList.remove("error");
+        classe_password.classList.remove("error");
+        classe_errore.innerText = "";
+        if (username === "" && password === "") {
+          classe_errore.innerText = "Inserire nome e password";
+          classe_username.classList.add("error");
+          classe_password.classList.add("error");
+          alert("Inserire Nome e Password");
+          return false;
+        }
+        if (username === "") {
+          classe_username.classList.add("error");
+          classe_errore.innerText = "Inserire nome";
+          alert("Inserire Nome");
+          return false;
+        }
+        if (password === "") {
+          classe_password.classList.add("error");
+          classe_errore.innerText = "Inserire password";
+          alert("Inserire Password");
+          return false;
+        }
+        return true;
+      }
+
+      function controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore) {
+        for (let i = 0; i < db.length; i += 2) {
+          if (username === db[i]) {
+            if (password === db[i + 1]) {
+              alert("Loggato!");
+            } else {
+              inserimento_errato(classe_username, classe_password, classe_errore);
             }
-            console.log(array_dati);
-            return array_dati;
-            }
+            return;
+          }
+        }
+        inserimento_errato(classe_username, classe_password, classe_errore);
+      }
 
-            function db_messaggi(){
-                return [
-                    "Nome utente non abbastanza lungo, 8 caratteri minimo [errore 0]",
-                    "Password troppo corta",
-                    "Nome Utente gia' presente.",
-                    "Le password devono combaciare"
-                ];
-            }
+      function inserimento_errato(classe_username, classe_password, classe_errore) {
+        classe_username.classList.add('error');
+        classe_password.classList.add("error");
+        classe_errore.innerText = "Nome o Password errati";
+      }
+      // ========================
+      // FUNZIONI REGISTRAZIONE
+      // ========================
+      function RegistraFunction() {
+        var Database = data_utenti(0, false);
+        var ClassUtente = document.getElementById("utente_registra");
+        var ClassPassword = document.getElementById("pass_registra");
+        var classPasswordRipeti = document.getElementById("pass_registra_controllo");
+        var Utente = ClassUtente.value;
+        var Password = ClassPassword.value;
+        var PasswordRipeti = classPasswordRipeti.value;
+        var error = document.getElementById("errore2");
+        const db_errori = db_messaggi();
+        ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori);
+        var bool = controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error);
+        if (bool) {
+          var boolDati = aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori);
+        }
+        var controllo_info_var = controllo_info();
+        if (controllo_info_var) {
+          if (boolDati) {
+            data_utenti(Utente, Password, true);
+            alert("Registrazione completata!");
+          }
+          alert_messaggio(Utente, Password);
+        }
+      }
 
-            // ========================
-            // FUNZIONI LOGIN
-            // ========================
-            function login_funct(){
-                var username = document.getElementById('utente').value;
-                var password = document.getElementById('pass').value;
-                var classe_username = document.getElementById('utente');
-                var classe_password = document.getElementById('pass');
-                var classe_errore = document.getElementById('errore');
-                var db = data_utenti();
+      function ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori) {
+        ClassUtente.classList.remove("error");
+        ClassPassword.classList.remove("error");
+        error.innerText = "";
+        if (Utente.length < 8 && Password.length < 8) {
+          error.innerText = db_errori[0] + "\n" + db_errori[1];
+          ClassUtente.classList.add("error");
+          ClassPassword.classList.add("error");
+          return;
+        }
+        if (Utente.length < 8) {
+          error.innerText = db_errori[0];
+          ClassUtente.classList.add("error");
+          return;
+        }
+        if (Password.length < 8) {
+          error.innerText = db_errori[1];
+          ClassPassword.classList.add("error");
+          return;
+        }
+      }
 
-                if(controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore)) {
-                    controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore);
-                }
-            }
+      function controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error) {
+        if (Password === PasswordRipeti) {
+          return true;
+        } else {
+          error.innerText = db_errori[3];
+          ClassPassword.classList.add("error");
+          classPasswordRipeti.classList.add("error");
+          return false;
+        }
+      }
 
-            function controlla_inserimento_parametri(username, password, classe_username, classe_password, classe_errore){
-                classe_username.classList.remove("error");
-                classe_password.classList.remove("error");
-                classe_errore.innerText = "";
+      function aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori) {
+        for (var i = 0; i < Database.length; i += 2) {
+          if (Utente === Database[i]) {
+            ClassUtente.classList.add("error");
+            error.innerText = db_errori[2];
+            return false;
+          }
+        }
+        return true;
+      }
 
-                if(username === "" && password === ""){
-                    classe_errore.innerText="Inserire nome e password";
-                    classe_username.classList.add("error");
-                    classe_password.classList.add("error");
-                    alert("Inserire Nome e Password");
-                    return false;
-                }
-                if(username === ""){
-                    classe_username.classList.add("error");
-                    classe_errore.innerText="Inserire nome";
-                    alert("Inserire Nome");
-                    return false;
-                }
-                if(password === ""){
-                    classe_password.classList.add("error");
-                    classe_errore.innerText="Inserire password";
-                    alert("Inserire Password");
-                    return false;
-                }
-                return true;
-            }
+      function alert_messaggio(Utente, Password) {
+        var x_lunghezza = Password.length;
+        var messaggio_password = "*" * x_lunghezza;
+        alert(utente + "\n" + messaggio_password);
+      }
+      // ========================
+      // CHECKBOXES
+      // ========================
+      function checkboxes() {
+        var cb1 = document.getElementById("c1");
+        var cb2 = document.getElementById("c2");
+        var cb3 = document.getElementById("c3");
+        cb1.addEventListener("click", function() {
+          SelezionaCheckbox(cb1); //esegue funzione sotto con cb1 come parametro
+          // 
+        });
+        cb2.addEventListener("click", function() {
+          SelezionaCheckbox(cb2);
+        });
+        cb3.addEventListener("click", function() {
+          SelezionaCheckbox(cb3);
+        });
 
-            function controllo_credenziali(username, password, db, classe_username, classe_password, classe_errore){
-                for(let i=0; i<db.length; i+=2){
-                    if(username === db[i]){
-                        if(password === db[i+1]){
-                            alert("Loggato!");
-                        } else {
-                            inserimento_errato(classe_username, classe_password, classe_errore);
-                        }
-                        return; 
-                    }
-                }
-                inserimento_errato(classe_username, classe_password, classe_errore);
-            }
+        function SelezionaCheckbox(cb_selezionato) {
+          cb1.checked = (cb_selezionato === cb1); // .checked = se ( cb1 === cb1) oppure (cb2 (checked) === cb1 => va a false)
+          cb2.checked = (cb_selezionato === cb2);
+          cb3.checked = false;
+          alert(cb_selezionato.id);
+        }
+      };
 
-            function inserimento_errato(classe_username, classe_password, classe_errore){
-                classe_username.classList.add('error');
-                classe_password.classList.add("error");
-                classe_errore.innerText="Nome o Password errati";
-            }
+      function mostraStato(checkbox) {
+        const nome = checkbox.nextElementSibling.textContent;
+        let messaggio = nome + (checkbox.checked ? " selezionato!" : " deselezionato!\n");
+        messaggio += "Stato attuale:\n";
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          const n = cb.nextElementSibling.textContent;
+          messaggio += n + ": " + (cb.checked ? "SI" : "NO") + "\n";
+        });
+        alert(messaggio);
+      }
 
-            // ========================
-            // FUNZIONI REGISTRAZIONE
-            // ========================
-            function RegistraFunction(){
-                var Database  = data_utenti(0,false);
-                var ClassUtente = document.getElementById("utente_registra");
-                var ClassPassword = document.getElementById("pass_registra");
-                var classPasswordRipeti = document.getElementById("pass_registra_controllo");
-                var Utente = ClassUtente.value;
-                var Password = ClassPassword.value;
-                var PasswordRipeti = classPasswordRipeti.value;
-                var error = document.getElementById("errore2");
-                const db_errori = db_messaggi();
-
-                ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori);
-                var bool = controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error);
-
-                if(bool){
-                    var boolDati = aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori);
-                }
-                var controllo_info_var = controllo_info();
-
-                if(controllo_info_var){
-                    if(boolDati){
-                        data_utenti(Utente, Password, true);
-                        alert("Registrazione completata!");
-                        }   
-                alert_messaggio(Utente,Password);
-                }
-
-            }
-
-            function ControlloCaselle(ClassUtente, ClassPassword, Utente, Password, error, db_errori){
-                ClassUtente.classList.remove("error");
-                ClassPassword.classList.remove("error");
-                error.innerText = "";
-
-                if(Utente.length < 8 && Password.length < 8){
-                    error.innerText = db_errori[0] + "\n" + db_errori[1];
-                    ClassUtente.classList.add("error");
-                    ClassPassword.classList.add("error");
-                    return;
-                }
-                if(Utente.length < 8){
-                    error.innerText = db_errori[0];
-                    ClassUtente.classList.add("error");
-                    return;
-                }
-                if(Password.length < 8){
-                    error.innerText = db_errori[1];
-                    ClassPassword.classList.add("error");
-                    return;
-                }
-            }
-
-            function controlloPasswordUguali(ClassPassword, Password, classPasswordRipeti, PasswordRipeti, db_errori, error){
-                if(Password === PasswordRipeti){
-                    return true;
-                } else {
-                    error.innerText = db_errori[3];
-                    ClassPassword.classList.add("error");
-                    classPasswordRipeti.classList.add("error");
-                    return false;
-                }
-            }
-
-            function aggiungereDatiControllo(ClassUtente, Utente, error, Database, db_errori){
-                for(var i=0; i<Database.length; i+=2){
-                    if(Utente === Database[i]){
-                        ClassUtente.classList.add("error");
-                        error.innerText = db_errori[2];
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            function alert_messaggio(Utente,Password){
-                var x_lunghezza =Password.length;
-                var messaggio_password ="*" * x_lunghezza;
-                alert(utente + "\n" + messaggio_password);
-            }
-
-            // ========================
-            // CHECKBOXES
-            // ========================
-            function checkboxes(){
-            var cb1 = document.getElementById("c1");
-            var cb2 = document.getElementById("c2");
-            var cb3 = document.getElementById("c3");
-
-            cb1.addEventListener("click", function() {
-                SelezionaCheckbox(cb1); //esegue funzione sotto con cb1 come parametro
-                // 
-            });
-            cb2.addEventListener("click", function() {
-                SelezionaCheckbox(cb2);
-            });
-            cb3.addEventListener("click", function() {
-                SelezionaCheckbox(cb3);
-            });
-
-            function SelezionaCheckbox(cb_selezionato) {
-                cb1.checked = (cb_selezionato === cb1); // .checked = se ( cb1 === cb1) oppure (cb2 (checked) === cb1 => va a false)
-                cb2.checked = (cb_selezionato === cb2);
-                cb3.checked = false;
-                alert(cb_selezionato.id);
-            }
-            };
-            function mostraStato(checkbox) {
-                const nome = checkbox.nextElementSibling.textContent;
-                let messaggio = nome + (checkbox.checked ? " selezionato!" : " deselezionato!\n");
-                messaggio += "Stato attuale:\n";
-
-                document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                    const n = cb.nextElementSibling.textContent;
-                    messaggio += n + ": " + (cb.checked ? "SI" : "X") + "\n";
-            });
-
-    alert(messaggio);
-}
-    function controllo_info(){
+      function controllo_info() {
         var cb1 = document.getElementById("c1");
         var cb2 = document.getElementById("c2");
         var cb3 = document.getElementById("c3");
@@ -253,139 +232,147 @@
         var giorni = document.getElementById("giorni").value;
         var giorni = document.getElementById("mesi").value;
         var giorni = document.getElementById("anni").value;
-
-        if(cb1.checked || cb2.checked ||cb3.checked){
-            alert("Sezione sesso va bene")
-            if(calcio.checked || basket.checked || canottaggio.checked){
-                alert("Sezione sport va bene");
-                //esecuzione riassunto
-                alert("Sezione info giusto");
-                return true;
-            }
+        if (cb1.checked || cb2.checked || cb3.checked) {
+          alert("Sezione sesso va bene")
+          if (calcio.checked || basket.checked || canottaggio.checked) {
+            alert("Sezione sport va bene");
+            //esecuzione riassunto
+            alert("Sezione info giusto");
+            return true;
+          }
+        } else {
+          alert("inserire tutti i parametri")
+          return false;
         }
-        else{
-            alert("inserire tutti i parametri")
-            return false;
-        }
-    }
-
+      }
     </script>
     <!-- CSS-->
     <style>
-            .error {
-            border: 4px solid red;
-            background: #b4243a;
-            }
+      .error {
+        border: 4px solid red;
+        background: #b4243a;
+      }
 
-            .correct {
-            border: 4px solid green;
-            background: #e8f5e8;
-            }
+      .correct {
+        border: 4px solid green;
+        background: #e8f5e8;
+      }
 
-            html {
-            display: flex;
-            justify-content: center;
-            font-family: Arial, Helvetica, sans-serif;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            }
+      html {
+        display: flex;
+        justify-content: center;
+        font-family: Arial, Helvetica, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+      }
 
-            .form-class {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 40px;
-            background: #d1d1d1;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-            align-items: center;
-            }
+      .form-class {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 40px;
+        background: #d1d1d1;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        align-items: center;
+      }
 
-            .inpt, .grandezza {
-            width: 100%;
-            padding: 14px;
-            border-radius: 20px;
-            border: 2px solid #ccc;
-            font-size: 1rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            }
+      .inpt,
+      .grandezza {
+        width: 100%;
+        padding: 14px;
+        border-radius: 20px;
+        border: 2px solid #ccc;
+        font-size: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
 
-            .inpt:focus, .grandezza:focus {
-            outline: none;
-            border-color: #6b46c1;
-            box-shadow: 0 0 10px rgba(107, 70, 193, 0.2);
-            }
+      .inpt:focus,
+      .grandezza:focus {
+        outline: none;
+        border-color: #6b46c1;
+        box-shadow: 0 0 10px rgba(107, 70, 193, 0.2);
+      }
 
-            input[type="button"] {
-            border-radius: 10px;
-            background-color: black;
-            color: white;
-            font-weight: bolder;
-            cursor: pointer;
-            padding: 12px 24px;
-            border: none;
-            font-size: 1rem;
-            transition: background 0.3s ease;
-            }
+      input[type="button"] {
+        border-radius: 10px;
+        background-color: black;
+        color: white;
+        font-weight: bolder;
+        cursor: pointer;
+        padding: 12px 24px;
+        border: none;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+      }
 
-            input[type="button"]:hover {
-            background: #333;
-            }
+      input[type="button"]:hover {
+        background: #333;
+      }
 
-            .bottone-reg {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-            }   
+      .bottone-reg {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
     </style>
-    
-    </head>
-    <body>
-        <div>
-            <h1 class="login-titolo">Login page</h1>
-            <form class="form-class">
-                <input type="text" placeholder="Utente" id="utente" class="grandezza inpt"><br>
-                <input type="password" placeholder="Password" id="pass" class="grandezza inpt"> <br>
-                <input type="button" value="Accedi" onclick="login_funct() " class="grandezza"> 
-            </form>
-        </div>
-        <p id="errore"></p>
-
-        <div>
-            <h1 class="login-titolo">Register Page</h1>
-            <form class="form-class">
-                <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt"><br>
-                <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt"> <br>
-                <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt"> <br>
-            </form>
-        </div>
-        <p id="errore2"></p>
-        <div class="form-class">
-            <div>
-                <input type="checkbox" id="c1" onclick=" checkboxes()"> <label>Maschio</label>
-                <input type="checkbox" id="c2" onclick=" checkboxes()"><label>Femmina</label>
-                <input type="checkbox" id="c3" onclick=" checkboxes()"><label>LGBTQ</label> <br>
-            </div>
-            <div>
-                <select id="giorni"></select>
-                <select id="mesi"></select>
-                <select id="anni"></select> <br>
-            </div>
-
-            <div>
-                <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
-                <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
-                <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
-            </div>
-
-            <div class="bottone-reg">        
-                <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza"> 
-             </div>
-        </div>
-    </body>
+  </head>
+  <body>
+    <div>
+      <h1 class="login-titolo">Login page</h1>
+      <form class="form-class">
+        <input type="text" placeholder="Utente" id="utente" class="grandezza inpt">
+        <br>
+        <input type="password" placeholder="Password" id="pass" class="grandezza inpt">
+        <br>
+        <input type="button" value="Accedi" onclick="login_funct() " class="grandezza">
+      </form>
+    </div>
+    <p id="errore"></p>
+    <div>
+      <h1 class="login-titolo">Register Page</h1>
+      <form class="form-class">
+        <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt">
+        <br>
+        <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt">
+        <br>
+        <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt">
+        <br>
+      </form>
+    </div>
+    <p id="errore2"></p>
+    <div class="form-class">
+      <div>
+        <input type="checkbox" id="c1" onclick=" checkboxes()">
+        <label>Maschio</label>
+        <input type="checkbox" id="c2" onclick=" checkboxes()">
+        <label>Femmina</label>
+        <input type="checkbox" id="c3" onclick=" checkboxes()">
+        <label>LGBTQ</label>
+        <br>
+      </div>
+      <div>
+        <select id="giorni"></select>
+        <select id="mesi"></select>
+        <select id="anni"></select>
+        <br>
+      </div>
+      <div>
+        <input type="checkbox" id="calcio" onclick="mostraStato(this)">
+        <label>Calcio</label>
+        <input type="checkbox" id="basket" onclick="mostraStato(this)">
+        <label>Basket</label>
+        <input type="checkbox" id="canottaggio" onclick="mostraStato(this)">
+        <label>Canottaggio</label>
+      </div>
+      <div class="bottone-reg">
+        <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza">
+      </div>
+    </div>
+  </body>
 </html>

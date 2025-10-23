@@ -273,80 +273,112 @@
     </script>
     <!-- CSS-->
     <style>
-        .error{
-            border: red solid 4px;
-        }
-        .correct{
-            border: green solid 4px;
-        }
-        html{
+            .error {
+            border: 4px solid red;
+            background: #ffebee;
+            }
+
+            .correct {
+            border: 4px solid green;
+            background: #e8f5e8;
+            }
+
+            html {
             display: flex;
             justify-content: center;
             font-family: Arial, Helvetica, sans-serif;
-        }
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            }
 
-        .form-class{
-            display: grid;
-            padding: 80px;
-        }
-        input[type="button"] {
+            .form-class {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 40px;
+            background: #d1d1d1;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            align-items: center;
+            }
+
+            .inpt, .grandezza {
+            width: 100%;
+            padding: 14px;
+            border-radius: 20px;
+            border: 2px solid #ccc;
+            font-size: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            }
+
+            .inpt:focus, .grandezza:focus {
+            outline: none;
+            border-color: #6b46c1;
+            box-shadow: 0 0 10px rgba(107, 70, 193, 0.2);
+            }
+
+            input[type="button"] {
             border-radius: 10px;
             background-color: black;
             color: white;
             font-weight: bolder;
-            cursor: grab;
-        }
-        .inpt{
-            border-radius: 20px;
-            text-align: center;
-        }
+            cursor: pointer;
+            padding: 12px 24px;
+            border: none;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            }
 
-        .grandezza{
-            height: 30px;
-            width: 200px;
-        }
+            input[type="button"]:hover {
+            background: #333;
+            }
+
+            .bottone-reg {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            }   
     </style>
     
     </head>
     <body>
         <div>
+            <h1 class="login-titolo">Login page</h1>
             <form class="form-class">
-                <h1 class="login-titolo">Login page</h1>
-                <input type="text" placeholder="Utente" id="utente" class="grandezza inpt"><br><br>
-                <input type="password" placeholder="Password" id="pass" class="grandezza inpt"> <br><br>
+                <input type="text" placeholder="Utente" id="utente" class="grandezza inpt"><br>
+                <input type="password" placeholder="Password" id="pass" class="grandezza inpt"> <br>
                 <input type="button" value="Accedi" onclick="login_funct() " class="grandezza"> 
             </form>
         </div>
         <p id="errore"></p>
 
         <div>
+            <h1 class="login-titolo">Register Page</h1>
             <form class="form-class">
-                <h1 class="login-titolo">Register Page</h1>
-                <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt"><br><br>
-                <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt"> <br><br>
-                <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt"> <br><br>
+                <input type="text" placeholder="Utente" id="utente_registra" class="grandezza inpt"><br>
+                <input type="password" placeholder="Password" id="pass_registra" class="grandezza inpt"> <br>
+                <input type="password" placeholder="Ripeti password" id="pass_registra_controllo" class="grandezza inpt"> <br>
             </form>
         </div>
         <p id="errore2"></p>
-        <h1>Checkbox con js</h1>  
         <div class="form-class">
             <input type="checkbox" id="c1" onclick=" checkboxes()"> <label>Maschio</label>
             <input type="checkbox" id="c2" onclick=" checkboxes()"><label>Femmina</label>
             <input type="checkbox" id="c3" onclick=" checkboxes()"><label>LGBTQ</label>
-        </div>
-        <h1>Data di nascita</h1>  
-        <div class="form-class">
             <select id="giorni"></select>
             <select id="mesi"></select>
             <select id="anni"></select>
-        </div>
-        <h1>hobby</h1>  
-        <div class="form-class">
             <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
             <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
-            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label> <br><br>
-            <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza"> 
+            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
+            <div class="bottone-reg">        
+                <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza"> 
+             </div>
         </div>
-
     </body>
 </html>

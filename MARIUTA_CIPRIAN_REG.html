@@ -3,7 +3,6 @@
     <head>
         <title>Titolo</title>
         <link rel="icon" href="">
-    <link rel="stylesheet" href="../css/style.css">
     <!--JS-->
     <script>
             window.onload = function() {
@@ -275,7 +274,7 @@
     <style>
             .error {
             border: 4px solid red;
-            background: #ffebee;
+            background: #b4243a;
             }
 
             .correct {
@@ -367,15 +366,23 @@
         </div>
         <p id="errore2"></p>
         <div class="form-class">
-            <input type="checkbox" id="c1" onclick=" checkboxes()"> <label>Maschio</label>
-            <input type="checkbox" id="c2" onclick=" checkboxes()"><label>Femmina</label>
-            <input type="checkbox" id="c3" onclick=" checkboxes()"><label>LGBTQ</label>
-            <select id="giorni"></select>
-            <select id="mesi"></select>
-            <select id="anni"></select>
-            <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
-            <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
-            <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
+            <div>
+                <input type="checkbox" id="c1" onclick=" checkboxes()"> <label>Maschio</label>
+                <input type="checkbox" id="c2" onclick=" checkboxes()"><label>Femmina</label>
+                <input type="checkbox" id="c3" onclick=" checkboxes()"><label>LGBTQ</label> <br>
+            </div>
+            <div>
+                <select id="giorni"></select>
+                <select id="mesi"></select>
+                <select id="anni"></select> <br>
+            </div>
+
+            <div>
+                <input type="checkbox" id="calcio" onclick="mostraStato(this)"><label>Calcio</label>
+                <input type="checkbox" id="basket" onclick="mostraStato(this)"><label>Basket</label>
+                <input type="checkbox" id="canottaggio" onclick="mostraStato(this)"><label>Canottaggio</label>
+            </div>
+
             <div class="bottone-reg">        
                 <input type="button" value="Registrati" onclick="RegistraFunction() " class="grandezza"> 
              </div>
